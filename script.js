@@ -1,4 +1,17 @@
-// --- MOVED resetForm FUNCTION TO THE VERY TOP ---
+// --- machineData object moved to the top ---
+const machineData = {
+    "99500": { leasingMin: 20666, leasingMax: 24114, creditMin: 149, creditMax: 299, flatrate: 5996, hasCredits: true, name: "Emerald" },
+    "37500": { leasingMin: 7872, leasingMax: 9186, creditMin: 75, creditMax: 159, flatrate: 3296, hasCredits: true, name: "FX 635" },
+    "44500": { leasingMin: 9317, leasingMax: 10871, creditMin: 95, creditMax: 199, flatrate: 4176, hasCredits: true, name: "FX 405" },
+    "45900": { leasingMin: 9605, leasingMax: 11208, creditMin: 99, creditMax: 199, flatrate: 4356, hasCredits: true, name: "Zerona" },
+    "9900": { leasingMin: 0, leasingMax: 0, creditMin: 0, creditMax: 0, flatrate: 0, hasCredits: false, name: "XLR8" },
+    "17900": { leasingMin: 0, leasingMax: 0, creditMin: 0, creditMax: 0, flatrate: 0, hasCredits: false, name: "EVRL" },
+    "19900": { leasingMin: 0, leasingMax: 0, creditMin: 0, creditMax: 0, flatrate: 0, hasCredits: false, name: "GVL" },
+    "30900": { leasingMin: 0, leasingMax: 0, creditMin: 0, creditMax: 0, flatrate: 0, hasCredits: false, name: "Base Station" },
+    "25900": { leasingMin: 0, leasingMax: 0, creditMin: 0, creditMax: 0, flatrate: 0, hasCredits: false, name: "Lunula" }
+};
+// --- End of machineData object ---
+
 function resetForm() {
     leasingCostInput.value = "0";
     leasingCostSlider.value = "0";
@@ -19,8 +32,6 @@ function resetForm() {
     }
     updateCalculations();
 }
-// --- END OF MOVED resetForm FUNCTION ---
-
 
 const treatmentsPerDayInput = document.getElementById("treatmentsPerDayInput");
 const revenuePerTreatmentInput = document.getElementById("revenuePerTreatmentInput");
@@ -37,11 +48,51 @@ const leasingMax = document.getElementById("leasingMax");
 const flatrateCostInput = document.getElementById("flatrateCostInput"); // ÄNDRAT från flatrateCost
 const flatrateContainer = document.getElementById("flatrateContainer");
 
+let fetchedMachineData = {};
 
-// Function to update calculations
+async function fetchMachineData() {
+    try {
+        const response = await fetch('machineData.json');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        fetchedMachineData = await response.json();
+        console.log("Machine data fetched successfully:", fetchedMachineData); // ADDED CONSOLE LOG
+        populateMachineOptions(fetchedMachineData);
+    } catch (error) {
+        console.error("Could not fetch machine data, using default data:", error);
+        populateMachineOptions(machineData); // USE DEFAULT DATA IF FETCH FAILS
+    }
+}
+
+function populateMachineOptions(data) {
+    console.log("Data received in populateMachineOptions:", data); // ADDED CONSOLE LOG
+    const machineSelect = document.getElementById("machine");
+    machineSelect.innerHTML = '<option value="0" selected>Välj maskin</option>';
+    for (const price in data) {
+        if (data.hasOwnProperty(price)) {
+            try {
+                const option = document.createElement("option");
+                option.value = price;
+                option.textContent = data[price].name;
+                machineSelect.appendChild(option);
+            } catch (error) {
+                console.error("Error creating or appending option:", error);
+            }
+        }
+    }
+    // Try forcing a redraw
+    if (machineSelect) {
+        machineSelect.style.display = 'none';
+        machineSelect.offsetHeight; // Trigger reflow
+        machineSelect.style.display = '';
+    }
+}
+
 function updateCalculations() {
     const machine = machineSelect.value;
     const leasingCost = parseFloat(leasingCostInput.value);
+    const treatmentsPerDay = parseFloat(treatmentsPerDayInput.value);
 
     if (isNaN(leasingCost)) {
         console.error("Leasingkostnaden är ogiltig:", leasingCostInput.value);
@@ -49,9 +100,12 @@ function updateCalculations() {
     }
 
     const data = machineData[machine];
-    if (!data) {
+    if (machine !== '0' && !data) { // Check if a machine is selected before accessing data
         console.error("Ingen data hittades för vald maskin:", machine);
         return;
+    }
+    if (machine === '0') {
+        return; // Do not perform calculations if no machine is selected
     }
 
     updateSliderLabels(); // Ensure labels are updated on calculations
@@ -68,33 +122,32 @@ function updateCalculations() {
     }
 
 
-    if (data.hasCredits) { // Only apply credit/flatrate logic if machine has credits
-        if (treatmentsPerDayInput.value >= 3) { // ÄNDRAT TILL behandlingar per dag INPUT
-            creditCostInput.value = 0; // Ensure creditCostInput is 0 when using flatrate
+    if (data.hasCredits) {
+        if (treatmentsPerDay >= 3) {
+            // Visa flatrate och dölj styckpris
+            const creditsGroup = document.querySelector(".credits-group");
+            const flatrateContainerElement = document.querySelector(".flatrate-container");
+            if (creditsGroup) creditsGroup.classList.add("hidden");
+            if (flatrateContainerElement) flatrateContainerElement.classList.remove("hidden");
+            creditCostInput.value = 0;
             flatrateCostInput.value = data.flatrate;
-
-            if (flatrateContainer) { // Null check before accessing classList - DEBUGGING
-                flatrateContainer.classList.remove("hidden");
-            } else {
-                console.warn("flatrateContainer element not found in updateCalculations() - REMOVE hidden"); // Debug log
-            }
         } else {
+            // Visa styckpris och dölj flatrate
+            const creditsGroup = document.querySelector(".credits-group");
+            const flatrateContainerElement = document.querySelector(".flatrate-container");
+            if (creditsGroup) creditsGroup.classList.remove("hidden");
+            if (flatrateContainerElement) flatrateContainerElement.classList.add("hidden");
             creditCostInput.value = creditPrice.toFixed(2);
             flatrateCostInput.value = 0;
-            if (flatrateContainer) { // Null check before accessing classList - DEBUGGING
-                flatrateContainer.classList.add("hidden");
-            } else {
-                console.warn("flatrateContainer element not found in updateCalculations() - ADD hidden"); // Debug log
-            }
         }
-    } else { // If machine has no credits, hide both
+    } else {
+        // Dölj både styckpris och flatrate
+        const creditsGroup = document.querySelector(".credits-group");
+        const flatrateContainerElement = document.querySelector(".flatrate-container");
+        if (creditsGroup) creditsGroup.classList.add("hidden");
+        if (flatrateContainerElement) flatrateContainerElement.classList.add("hidden");
         creditCostInput.value = 0;
         flatrateCostInput.value = 0;
-        if (flatrateContainer) { // Null check before accessing classList - DEBUGGING
-            flatrateContainer.classList.add("hidden");
-        } else {
-            console.warn("flatrateContainer element not found in updateCalculations() - NO CREDITS - ADD hidden"); // Debug log
-        }
     }
 
 
@@ -106,99 +159,9 @@ function updateCalculations() {
 }
 
 
-// Data för maskinerna (priser i kr)
-const machineData = {
-    "99500": { // Emerald
-        leasingMin: 20666,
-        leasingMax: 24114,
-        creditMin: 149,
-        creditMax: 299,
-        flatrate: 5996,
-        hasCredits: true
-    },
-    "37500": { // FX 635
-        leasingMin: 7872,
-        leasingMax: 9186,
-        creditMin: 75,
-        creditMax: 159,
-        flatrate: 3296,
-        hasCredits: true
-    },
-    "44500": { // FX 405
-        leasingMin: 9317,
-        leasingMax: 10871,
-        creditMin: 95,
-        creditMax: 199,
-        flatrate: 4176,
-        hasCredits: true
-    },
-    "45900": { // Zerona
-        leasingMin: 9605,
-        leasingMax: 11208,
-        creditMin: 99,
-        creditMax: 199,
-        flatrate: 4356,
-        hasCredits: true
-    },
-    "9900": { // XLR8
-        leasingMin: 0,
-        leasingMax: 0,
-        creditMin: 0,
-        creditMax: 0,
-        flatrate: 0,
-        hasCredits: false
-    },
-    "17900": { // EVRL
-        leasingMin: 0,
-        leasingMax: 0,
-        creditMin: 0,
-        creditMax: 0,
-        flatrate: 0,
-        hasCredits: false
-    },
-    "19900": { // GVL
-        leasingMin: 0,
-        leasingMax: 0,
-        creditMin: 0,
-        creditMax: 0,
-        flatrate: 0,
-        hasCredits: false
-    },
-    "30900": { // Base Station
-        leasingMin: 0,
-        leasingMax: 0,
-        creditMin: 0,
-        creditMax: 0,
-        flatrate: 0,
-        hasCredits: false
-    },
-    "25900": { // Lunula
-        leasingMin: 0,
-        leasingMax: 0,
-        creditMin: 0,
-        creditMax: 0,
-        flatrate: 0,
-        hasCredits: false
-    }
-};
-
 // Function to fetch exchange rate from Riksbankens API
 async function fetchExchangeRate(fromCurrency, toCurrency) {
-    const url = `https://api.riksbank.se/swea/v1/CrossRates/SEK${fromCurrency.toUpperCase()}PMI/SEK${toCurrency.toUpperCase()}PMI`;
-
-    try {
-        const response = await fetch(url);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const data = await response.json();
-        const latestSeries = data.series.pop();
-        const exchangeRate = latestSeries.result / 10000;
-        return exchangeRate;
-    } catch (error) {
-        console.error("Error fetching exchange rate:", error);
-        return null;
-    }
+    return null; // Return null to use fallback in calculateLeasingCost
 }
 
 // Function to calculate leasing cost
@@ -305,11 +268,13 @@ function calculateAndUpdateTable() {
     const leasingCost = parseFloat(leasingCostInput.value) || 0;
     const creditCost = parseFloat(creditCostInput.value);
     const clinicSize = parseInt(clinicSizeSlider.value);
+    const machineValue = machineSelect.value;
 
     const revenuePerDay = treatmentsPerDay * revenuePerTreatment;
+    const revenuePerWeek = revenuePerDay * 5;
     const revenuePerMonth = revenuePerDay * 22;
     const revenuePerYear = revenuePerMonth * 12;
-    const costPerMonth = calculateCostPerMonth(treatmentsPerDay, creditCost, machineSelect.value); // Pass machineValue to calculateCostPerMonth
+    const costPerMonth = calculateCostPerMonth(treatmentsPerDay, creditCost, machineValue); // Pass machineValue to calculateCostPerMonth
     const netPerMonth = Math.round(revenuePerMonth - leasingCost - costPerMonth);
     const netPerYear = netPerMonth * 12;
     const totalRevenue50 = Math.round(revenuePerYear * 0.5);
@@ -317,7 +282,10 @@ function calculateAndUpdateTable() {
     const totalRevenue100 = Math.round(revenuePerYear);
 
     document.getElementById("treatmentsPerDayValue").textContent = `${treatmentsPerDay} st`;
-    document.getElementById("netPerYearValue3").textContent = formatNumberWithSpaces(netPerYear) + " kr";
+    const netPerYearElements = document.querySelectorAll("#netPerYearValue3");
+    netPerYearElements.forEach(element => {
+        element.textContent = formatNumberWithSpaces(netPerYear) + " kr";
+    });
     document.getElementById("revenuePerTreatmentValue").textContent = formatNumberWithSpaces(revenuePerTreatment) + " kr";
     document.getElementById("revenuePerDayValue").textContent = formatNumberWithSpaces(revenuePerDay) + " kr"; // **KORRIGERAT - TAGIT BORT * 7**
     document.getElementById("revenuePerWeekValue").textContent = formatNumberWithSpaces(revenuePerDay * 7) + " kr";
@@ -331,7 +299,7 @@ function calculateAndUpdateTable() {
     document.getElementById("totalCostValue").textContent = formatNumberWithSpaces(leasingCost + costPerMonth) + " kr";
     document.getElementById("netPerMonthValue").textContent = formatNumberWithSpaces(netPerMonth) + " kr";
     document.getElementById("netPerYearValue2").textContent = formatNumberWithSpaces(netPerYear) + " kr";
-    document.getElementById("netPerYearValue3").textContent = formatNumberWithSpaces(netPerYear); // Corrected: Removed "+ " kr" duplication
+    // document.getElementById("netPerYearValue3").textContent = formatNumberWithSpaces(netPerYear); // Corrected: Removed "+ " kr" duplication - handled by querySelectorAll
 
     updateSliderLabels(); // Call function to update slider labels
 }
@@ -470,8 +438,8 @@ leasingCostInput.addEventListener("input", function() {
 });
 
 // Lägg till detta i slutet av filen
-document.addEventListener('DOMContentLoaded', function() {
-    // Reset form initially
+document.addEventListener('DOMContentLoaded', async function() { // Made the function async
+    await fetchMachineData(); // Await the fetch operation
     resetForm();
 
     // Set initial state
@@ -480,7 +448,8 @@ document.addEventListener('DOMContentLoaded', function() {
     calculateAndUpdateTable();
 
     // If no machine is selected, hide credit-related elements
-    if (machineSelect.value === "0") {
+    const machineSelectElement = document.getElementById('machine');
+    if (machineSelectElement && machineSelectElement.value === "0") {
         const creditsGroup = document.querySelector('.credits-group');
         const flatrateContainerElement = document.querySelector('.flatrate-container');
 

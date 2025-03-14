@@ -1,236 +1,147 @@
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+/* Grundläggande reset */
+body, h1, h2, h3, p, table, th, td, input, select, button {
   margin: 0;
   padding: 0;
-  background-color: #f4f7f6; /* Ljusare bakgrundsfärg */
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* Bakgrund och layout */
+body {
+  background-color: #f9f9f9;
   color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh; /* Se till att bakgrunden täcker hela viewporten */
+  line-height: 1.6;
+  padding: 20px;
 }
 
 .container {
-  background-color: white;
-  padding: 30px; /* Ökat padding */
-  border-radius: 10px; /* Rundare hörn */
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); /* Tydligare skugga */
-  width: 90%; /* Responsiv bredd */
-  max-width: 900px; /* Max bredd för större skärmar */
-  margin: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 h1 {
-  color: #2c3e50; /* Mörkare rubrikfärg */
+  background-color: #50C878; /* Emerald green */
+  color: #fff;
   text-align: center;
-  margin-bottom: 20px;
-  font-weight: bold; /* Fetare rubrik */
+  padding: 20px;
+  font-size: 24px;
 }
 
-h2 {
-  color: #3498db; /* Accentfärg för sektionsrubriker */
-  margin-top: 25px; /* Mer utrymme ovanför sektionsrubriker */
-  margin-bottom: 10px;
-  font-size: 1.5em; /* Större rubrikstorlek */
-  border-bottom: 2px solid #3498db; /* Linje under rubriker */
-  padding-bottom: 5px;
-}
-
+/* Layout för innehåll */
 .content {
   display: flex;
-  flex-direction: column; /* Stapla innehållet vertikalt */
-  align-items: stretch; /* Sträck ut innehållet i containerns bredd */
-}
-
-.controls-panel, .result-panel {
+  flex-wrap: wrap;
   padding: 20px;
-  border-radius: 8px;
-  background-color: #ecf0f1; /* Ljusare panelbakgrund */
-  margin-bottom: 20px;
+  gap: 20px;
 }
 
 .controls-panel {
-  flex: 1; /* Panelen tar upp tillgängligt utrymme */
-  margin-right: 0; /* Inget höger-margin för responsiv layout */
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  padding: 20px;
+  background: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .result-panel {
-  flex: 1; /* Panelen tar upp tillgängligt utrymme */
-  background-color: #dff0ef; /* Ännu ljusare result panel bakgrund */
+  flex: 2;
+  min-width: 400px;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
+/* Rubriker */
+h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: #444;
+}
 
-.clinic-size-group,
-.treatments-per-day-group,
-.input-group,
-.leasing-slider-group,
-.credits-group,
-.insurance-group,
-.leasing-period-group {
+/* Input-grupper */
+.input-group {
   margin-bottom: 15px;
 }
 
-
-.clinic-size-group h2 {
-  font-size: 1.3em;
-  color: #2c3e50;
-  border-bottom: none; /* Ingen linje under klinikstorlek rubrik */
-  padding-bottom: 0;
+.input-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.clinic-size-group input[type="range"] {
+.input-group input,
+.input-group select {
   width: 100%;
-  margin-bottom: 10px;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Slider */
+input[type="range"] {
+  width: 100%;
+  margin: 10px 0;
 }
 
 .slider-labels {
   display: flex;
   justify-content: space-between;
-  margin-top: 5px;
+  font-size: 12px;
+  color: #666;
 }
 
-.input-group label,
-.treatments-per-day-group label,
-.leasing-slider-group label,
-.credits-group label,
-.insurance-group label,
-.leasing-period-group label {
-  display: block;
-  margin-bottom: 8px;
-  color: #2c3e50; /* Etikettfärg */
-  font-weight: bold; /* Fetare etiketter */
+/* Resultattabell */
+.result-table-container {
+  overflow-x: auto;
 }
 
-.input-group select,
-.input-group input[type="number"],
-.treatments-per-day-group input[type="number"],
-.leasing-slider-group input[type="range"],
-.credits-group input[type="number"],
-.insurance-group select,
-.leasing-period-group select,
-#clinicSizeSlider {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #bdc3c7; /* Diskret рамка */
-  width: calc(100% - 22px); /* Anpassa bredden för att inkludera padding och рамка */
-  margin-bottom: 10px;
-  font-size: 1em;
-  background-color: white; /* Vit bakgrund för inmatningsfält */
-}
-
-
-.treatments-per-day-group input[type="number"] {
-  width: calc(100% - 22px); /* Anpassa bredden */
-}
-
-
-#clinicSizeSlider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 15px;
-  border-radius: 5px;
-  background: #d3d3d3;
-  outline: none;
-  -webkit-transition: .2s;
-  transition: opacity .2s;
-}
-
-#clinicSizeSlider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #3498db;
-  cursor: pointer;
-}
-
-#clinicSizeSlider::-moz-range-thumb {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #3498db;
-  cursor: pointer;
-}
-
-
-.result-panel h2 {
-  color: #27ae60; /* Grönare färg för resultat rubrik */
-  border-bottom-color: #27ae60; /* Grönare linje under resultat rubrik */
-}
-
-
-#resultTable {
+table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 10px;
 }
 
-#resultTable th, #resultTable td {
-  padding: 12px 15px;
-  border-bottom: 1px solid #ddd;
+th, td {
+  padding: 10px;
   text-align: left;
+  border: 1px solid #ddd;
 }
 
-#resultTable th {
-  background-color: #f2f2f2;
-  color: #555;
+th {
+  background-color: #50C878;
+  color: #fff;
   font-weight: bold;
 }
 
-#resultTable tbody tr:last-child td {
-  border-bottom: 2px solid #ddd; /* Tjockare linje för sista raden */
-}
-
-#resultTable .group-header {
-  background-color: #e0e0e0;
+.group-header {
+  background-color: #f4f4f4;
   font-weight: bold;
-  color: #444;
   text-align: center;
 }
 
-.result-table-container {
-  overflow-x: auto; /* Gör tabellen scrollbar i sidled om den är för bred */
-}
-
-
-.hidden {
-  display: none !important;
-}
-
+/* Footer */
 footer {
   text-align: center;
-  margin-top: 30px;
-  padding: 20px;
-  color: #777;
-  border-top: 1px solid #ddd;
+  margin-top: 20px;
+  font-size: 12px;
+  color: #666;
 }
 
-/* Responsivitet för mindre skärmar */
-@media (max-width: 768px) {
-  .container {
-      width: 100%;
-      margin: 0;
-      border-radius: 0;
-      box-shadow: none;
-  }
-
-  .content {
-      flex-direction: column; /* Stapla paneler under varandra på små skärmar */
-  }
-
-  .controls-panel, .result-panel {
-      margin-right: 0; /* Ingen höger-margin på små skärmar */
-      margin-bottom: 15px;
-  }
+/* Dolda element */
+.hidden {
+  display: none;
 }
 
-/* Aktiv label för klinikstorlek slider */
+/* Aktiva etiketter */
 .slider-labels span.active {
   font-weight: bold;
-  color: #333;
-}
-
-.flatrate-container {
-  margin-top: 15px; /* Lägg till lite utrymme ovanför flatrate-containern */
+  color: #50C878;
 }
