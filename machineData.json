@@ -1,0 +1,74 @@
+const machineData = {
+    "99500": { // Emerald
+        leasingMin: 20666,
+        leasingMax: 24114,
+        creditMin: 149,
+        creditMax: 299,
+        flatrate: 5996,
+        hasCredits: true
+    },
+    "37500": { // FX 635
+        leasingMin: 7872,
+        leasingMax: 9186,
+        creditMin: 75,
+        creditMax: 159,
+        flatrate: 3296,
+        hasCredits: true
+    },
+    "44500": { // FX 405
+        leasingMin: 9317,
+        leasingMax: 10871,
+        creditMin: 95,
+        creditMax: 199,
+        flatrate: 4176,
+        hasCredits: true
+    },
+    "45900": { // Zerona
+        leasingMin: 9605,
+        leasingMax: 11208,
+        creditMin: 99,
+        creditMax: 199,
+        flatrate: 4356,
+        hasCredits: true
+    },
+    "9900": { // XLR8
+        leasingMin: 0,
+        leasingMax: 0,
+        creditMin: 0,
+        creditMax: 0,
+        flatrate: 0,
+        hasCredits: false
+    },
+    "17900": { // EVRL
+        leasingMin: 0,
+        leasingMax: 0,
+        creditMin: 0,
+        creditMax: 0,
+        flatrate: 0,
+        hasCredits: false
+    },
+    "19900": { // GVL
+        leasingMin: 0,
+        leasingMax: 0,
+        creditMin: 0,
+        creditMax: 0,
+        flatrate: 0,
+        hasCredits: false
+    },
+    "30900": { // Base Station
+        leasingMin: 0,
+        leasingMax: 0,
+        creditMin: 0,
+        creditMax: 0,
+        flatrate: 0,
+        hasCredits: false
+    },
+    "25900": { // Lunula
+        leasingMin: 0,
+        leasingMax: 0,
+        creditMin: 0,
+        creditMax: 0,
+        flatrate: 0,
+        hasCredits: false
+    }
+};

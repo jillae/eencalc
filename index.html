@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intäktsberäkning - Emerald Sweden</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Intäktsberäkning - Emerald Sweden</h1>
+        <div class="content">
+            <div class="controls-panel">
+                <div class="clinic-size-group">
+                    <h2>Välj klinikstorlek:</h2>
+                    <input type="range" id="clinicSizeSlider" min="1" max="3" value="2" step="1">
+                    <div class="slider-labels">
+                        <span id="small-label">Small</span>
+                        <span id="medium-label">Medium</span>
+                        <span id="large-label">Large</span>
+                    </div>
+                    <div class="result">
+                        Netto per år (ex moms): <span id="netPerYearValue3"></span> kr
+                    </div>
+                </div>
+                <h2>Justera värden:</h2>
+                <div class="input-group treatments-per-day-group">
+                    <label for="treatmentsPerDayInput">Antal behandlingar per dag:</label>
+                    <input type="number" id="treatmentsPerDayInput" name="treatmentsPerDay" value="4" min="1" max="12" class="treatments-per-day-input">
+                </div>
+                <div class="input-group">
+                    <label for="machine">Välj maskin:</label>
+                    <select id="machine" name="machine">
+                        <option value="0" selected>Välj maskin</option>
+                        <option value="30900">Base Station</option>
+                        <option value="99500">Emerald</option>
+                        <option value="17900">EVRL</option>
+                        <option value="44500">FX 405</option>
+                        <option value="37500">FX 635</option>
+                        <option value="19900">GVL</option>
+                        <option value="25900">Lunula</option>
+                        <option value="9900">XLR8</option>
+                        <option value="45900">Zerona</option>
+                    </select>
+                </div>
+                <div class="input-group leasing-period-group">
+                    <label for="leasingPeriodSelect">Leasingperiod:</label>
+                    <select id="leasingPeriodSelect" name="leasingPeriodSelect">
+                        <option value="0">Välj period</option>
+                        <option value="4.566" data-months="24">24</option>
+                        <option value="3.189" data-months="36">36</option>
+                        <option value="2.504" data-months="48">48</option>
+                        <option value="2.095" data-months="60" selected>60</option>
+                    </select>
+                </div>
+                <div class="input-group insurance-group">
+                    <label for="insuranceSelect">Försäkring:</label>
+                    <select id="insuranceSelect" name="insuranceSelect">
+                        <option value="ja">Ja</option>
+                        <option value="nej">Nej</option>
+                    </select>
+                </div>
+                <div class="input-group leasing-slider-group">
+                    <label for="leasingCostSlider">Justera leasingkostnad:</label>
+                    <input type="range" id="leasingCostSlider" min="0" max="50000" value="24114" step="500">
+                    <div class="slider-labels">
+                        <span id="leasingMin"></span>
+                        <span id="leasingMax"></span>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label for="leasingCostInput">Leasingkostnad per månad<br>(kr) ex moms:</label>
+                    <input type="number" id="leasingCostInput" name="leasingCostInput" value="0" min="0" readonly>
+                </div>
+                <div class="input-group credits-group">
+                    <label for="creditCostInput">Credits Styckepris<br>(kr) ex moms per styck:</label>
+                    <input type="number" id="creditCostInput" name="creditCostInput" value="149" min="0">
+                </div>
+                <div class="input-group flatrate-container hidden">
+                    <label for="flatrateCostInput">Credits Flatrate - credits efter behov<br>(kr) ex moms per månad:</label>
+                    <input type="number" id="flatrateCostInput" name="flatrateCostInput" value="0" min="0" readonly>
+                </div>
+                <div class="input-group">
+                    <label for="revenuePerTreatmentInput">Kundpris per behandling<br>(kr) ink moms:</label>
+                    <input type="number" id="revenuePerTreatmentInput" name="revenuePerTreatmentInput" value="2995" min="0" step="100">
+                </div>
+            </div>
+            <div class="result-panel">
+                <h2>Resultat</h2>
+                <div class="result-table-container">
+                    <table id="resultTable">
+                        <thead>
+                            <tr>
+                                <th>Beskrivning</th>
+                                <th>Värde</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="2" class="group-header"><strong>Översikt</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Antal behandlingar per dag</td>
+                                <td id="treatmentsPerDayValue"></td>
+                            </tr>
+                            <tr>
+                                <td>Netto per år (ex moms)</td>
+                                <td id="netPerYearValue3"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="group-header"><strong>Intäkter</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Kundpris per behandling (ink moms)</td>
+                                <td id="revenuePerTreatmentValue"></td>
+                            </tr>
+                            <tr>
+                                <td>Intäkt per dag (ink moms)</td>
+                                <td id="revenuePerDayValue"></td>
+                            </tr>
+                            <tr>
+                                <td>Intäkt per vecka (ink moms)</td>
+                                <td id="revenuePerWeekValue"></td>
+                            </tr>
+                            <tr>
+                                <td>Intäkt per månad (ink moms)</td>
+                                <td id="revenuePerMonthValue"></td>
+                            </tr>
+                            <tr>
+                                <td>Intäkt per år (ink moms)</td>
+                                <td id="revenuePerYearValue"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="group-header"><strong>Budget baserat på beläggning</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Beläggning 50%, år 1 (ink moms)</td>
+                                <td id="totalRevenue50Value"></td>
+                            </tr>
+                            <tr>
+                                <td>Beläggning 75%, år 2 (ink moms)</td>
+                                <td id="totalRevenue75Value"></td>
+                            </tr>
+                            <tr>
+                                <td>Beläggning 100%, år 3 (ink moms)</td>
+                                <td id="totalRevenue100Value"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="group-header"><strong>Kostnader</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Leasingkostnad per månad (ex moms)</td>
+                                <td id="leasingCostValue"></td>
+                            </tr>
+                            <tr>
+                                <td class="driftkostnad-label">Drift (credits/flatrate) - per månad (ex moms)</td>
+                                <td id="costPerMonthValue"></td>
+                            </tr>
+                            <tr>
+                                <td>Total (ex moms)</td>
+                                <td id="totalCostValue"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" class="group-header"><strong>Resultat</strong></td>
+                            </tr>
+                            <tr>
+                                <td>Netto per månad (ex moms)</td>
+                                <td id="netPerMonthValue"></td>
+                            </tr>
+                            <tr>
+                                <td>Netto per år (ex moms)</td>
+                                <td id="netPerYearValue2"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <p>Detta är endast ett beräkningsunderlag. Avtal gäller.</p>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p style="text-align: center;">&copy; 2025 Arch Academy AB. All rights reserved.</p>
+    </footer>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+</body>
+</html>
