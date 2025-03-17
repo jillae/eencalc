@@ -5,7 +5,8 @@
         "creditMin": 149,
         "creditMax": 299,
         "flatrate": 5996,
-        "hasCredits": true
+        "hasCredits": true,
+        "name": "Emerald"
     },
     "37500": {
         "leasingMin": 7872,
@@ -13,7 +14,8 @@
         "creditMin": 75,
         "creditMax": 159,
         "flatrate": 3296,
-        "hasCredits": true
+        "hasCredits": true,
+        "name": "FX 635"
     },
     "44500": {
         "leasingMin": 9317,
@@ -21,7 +23,8 @@
         "creditMin": 95,
         "creditMax": 199,
         "flatrate": 4176,
-        "hasCredits": true
+        "hasCredits": true,
+        "name": "FX 405"
     },
     "45900": {
         "leasingMin": 9605,
@@ -29,7 +32,8 @@
         "creditMin": 99,
         "creditMax": 199,
         "flatrate": 4356,
-        "hasCredits": true
+        "hasCredits": true,
+        "name": "Zerona"
     },
     "9900": {
         "leasingMin": 0,
@@ -37,6 +41,43 @@
         "creditMin": 0,
         "creditMax": 0,
         "flatrate": 0,
-        "hasCredits": false
+        "hasCredits": false,
+        "name": "XLR8"
+    },
+    "17900": {
+        "leasingMin": 0,
+        "leasingMax": 0,
+        "creditMin": 0,
+        "creditMax": 0,
+        "flatrate": 0,
+        "hasCredits": false,
+        "name": "EVRL"
+    },
+    "19900": {
+        "leasingMin": 0,
+        "leasingMax": 0,
+        "creditMin": 0,
+        "creditMax": 0,
+        "flatrate": 0,
+        "hasCredits": false,
+        "name": "GVL"
+    },
+    "30900": {
+        "leasingMin": 0,
+        "leasingMax": 0,
+        "creditMin": 0,
+        "creditMax": 0,
+        "flatrate": 0,
+        "hasCredits": false,
+        "name": "Base Station"
+    },
+    "25900": {
+        "leasingMin": 0,
+        "leasingMax": 0,
+        "creditMin": 0,
+        "creditMax": 0,
+        "flatrate": 0,
+        "hasCredits": false,
+        "name": "Lunula"
     }
 }
